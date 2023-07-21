@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  web:
+    container_name: php-apache
+    build: ./php-apache
+    ports:
+      - 80:80
+    volumes:
+      - ./src/laravel:/var/www/html/laravel
+      - ./php-apache/default.conf:/etc/apache2/sites-enabled/000-default.conf
+    restart: always
+    working_dir: /var/www/html/laravel
