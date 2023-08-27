@@ -1,4 +1,4 @@
-# MyYoutubeApp
+# YoutubeApp
 
 # 概要
 Youtube Data Api v3を使用し、Youtubeから動画情報を取得してLINEに通知させます。<br>
