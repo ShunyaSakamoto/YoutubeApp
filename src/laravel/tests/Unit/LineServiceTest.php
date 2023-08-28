@@ -16,7 +16,7 @@ class LineServiceTest extends TestCase
         Artisan::call('config:clear');
     }
 
-    public function testSendLineMessage() : void
+    public function test_send_line_message() : void
     {
         ### Arrange
         $http_client = new CurlHTTPClient(config('services.line.message.access_token'));

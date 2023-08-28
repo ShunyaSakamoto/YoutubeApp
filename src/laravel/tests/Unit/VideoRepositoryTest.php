@@ -29,7 +29,7 @@ class VideoRepositoryTest extends TestCase
         Artisan::call('migrate:refresh --env=testing');
     }
 
-    public function test_storeTrendVideo()
+    public function test_store_trend_video()
     {
         ### Arrange
         $videoCollection = collect([
