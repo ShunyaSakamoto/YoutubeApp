@@ -9,6 +9,7 @@ class Kernel extends ConsoleKernel
 {
     protected $commands = [
         Commands\GetTrendMusic::class,
+        Commands\GetTrendLatest::class,
     ];
 
     /**
@@ -19,8 +20,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // 毎日18:00に実行
-        $schedule->command('youtube:get-trend-music')->dailyAt('18:00');
+        // 10:00、17:00に実行
+        $schedule->command('youtube:get-trend-latest')
+            ->twiceDaily('10:00', '17:00');
+
+        // 18:00に実行
+        $schedule->command('youtube:get-trend-music')
+            ->dailyAt('18:00');
     }
 
     /**

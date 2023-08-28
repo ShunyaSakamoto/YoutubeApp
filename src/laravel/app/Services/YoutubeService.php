@@ -65,7 +65,7 @@ class YoutubeService
             'chart' => 'mostPopular',
             'maxResults' => self::MAX_SNIPPETS_COUNT,
             'regionCode' => 'JP',
-            'videoCategoryId' => config('services.youtube.video_category_id.music'),
+            'videoCategoryId' => $videoCategoryId,
         ];
 
         try {
