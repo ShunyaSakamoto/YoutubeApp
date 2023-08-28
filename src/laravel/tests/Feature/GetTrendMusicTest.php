@@ -2,30 +2,33 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class GetTrendMusicTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function setUp() : void
     {
         parent::setUp();
         Artisan::call('config:clear');
+        Artisan::call('migrate:refresh --env=testing');
     }
 
     /**
-     * A basic feature test example.
+     * 急上昇音楽動画取得テスト
+     * Youtubeの急上昇動画を取得した後に、LINEに動画情報の通知が来ることを確認する
      *
      * @return void
      */
-    public function test_example()
+    public function test_get_trend_music() : void
     {
-        $response = $this->get('/');
+        ### Arrange
+        // Nothing to do.
+        
+        ### Act
+        $resultCode = Artisan::call('youtube:get-trend-music');
 
-        $response->assertStatus(200);
+        ## Assert
+        $this->assertSame($resultCode, 1);
     }
 }

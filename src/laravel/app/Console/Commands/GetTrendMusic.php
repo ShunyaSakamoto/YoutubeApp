@@ -52,10 +52,12 @@ class GetTrendMusic extends Command
      */
     public function handle() : int
     {
+        $videoCategoryId = config('services.youtube.video_category_id.music');
+
         try {
             Log::info('Trying to get video list on Youtube starts.');
-            // 急上昇ミュージックビデオ情報の取得
-            $youtubeCollection = $this->youtubeService->getTrendMusicVideoList();
+            // 急上昇音楽動画の取得
+            $youtubeCollection = $this->youtubeService->getTrendVideoList($videoCategoryId);
             Log::info('Trying to get video list on Youtube ends.');
 
             if ($youtubeCollection->isEmpty()) {
@@ -63,7 +65,7 @@ class GetTrendMusic extends Command
             }
 
             // LINEメッセージの作成
-            $message = $this->lineService->createLineMessageForTrendVideo($youtubeCollection);
+            $message = $this->lineService->createLineMessageForTrendVideo($videoCategoryId, $youtubeCollection);
             Log::info('Trying to send LINE message starts.');
             // LINEメッセージの送信
             $this->lineService->sendMessage($message);

@@ -60,6 +60,7 @@ return [
 
         // サポートされていない動画カテゴリーはコメントアウトしている
         'video_category_id' => [
+            'latest' => '0',
             'movie_and_anime' => '1',
             'bicycle_and_vehicle' => '2',
             'music' => '10',

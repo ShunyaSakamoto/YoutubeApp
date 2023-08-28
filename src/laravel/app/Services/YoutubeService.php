@@ -46,11 +46,12 @@ class YoutubeService
     }
 
     /**
-     * 日本の急上昇ミュージック動画情報を取得
+     * 日本の急上昇動画情報を取得
      * 
+     * @param string $videoCategoryId
      * @return Collection
      */
-    public function getTrendMusicVideoList() : Collection
+    public function getTrendVideoList(string $videoCategoryId) : Collection
     {
         $parts = [
             'id',               // 動画ID
@@ -174,7 +175,7 @@ class YoutubeService
     }
 
     /**
-     * 動画URLの生成
+     * 動画URLを生成
      *
      * @param string $videoId
      * @return string
