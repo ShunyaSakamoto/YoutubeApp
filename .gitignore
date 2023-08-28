@@ -1,3 +1,4 @@
 /.vscode
 /mysql/data
 .env
+.env.testing
