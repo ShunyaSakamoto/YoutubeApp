@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -56,7 +57,7 @@ class LineService
 
     /**
      * 急上昇動画専用のLINEメッセージを生成
-     * 
+     *
      * @param string $videoCategoryId
      * @param Collection $collection
      * @return string
@@ -125,10 +126,11 @@ class LineService
      */
     private function _createLineMessageTitle(string $videoCategoryId) : string
     {
+        $now = Carbon::now()->format('n/j G:i');    // 月、日、時は先頭0埋め
         $videoCategoryName = '';
         switch (true) {
             case $videoCategoryId === config('services.youtube.video_category_id.latest') :
-                $videoCategoryName = '最新';
+                $videoCategoryName = '';    // 最新
                 break;
             case $videoCategoryId === config('services.youtube.video_category_id.movie_and_anime') :
                 $videoCategoryName = '映画・アニメ';
@@ -171,6 +173,6 @@ class LineService
                 break;
         }
 
-        return sprintf('今日の急上昇%s動画はこちら', $videoCategoryName);
+        return sprintf('%s 時点の急上昇%s動画', $now, $videoCategoryName);
     }
 }
