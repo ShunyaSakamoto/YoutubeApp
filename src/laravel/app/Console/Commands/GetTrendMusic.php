@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Log;
 
 class GetTrendMusic extends Command
 {
+    /** 動画情報取得上限数 */
+    private const MAX_RESULTS_COUNT = 3;
+
     /**
      * The name and signature of the console command.
      *
@@ -27,7 +30,7 @@ class GetTrendMusic extends Command
     /**
      * Youtubeサービスインスタンス
      *
-     * @param YoutubeService
+     * @var YoutubeService
      */
     private YoutubeService $youtubeService;
 
@@ -55,10 +58,10 @@ class GetTrendMusic extends Command
         $videoCategoryId = config('services.youtube.video_category_id.music');
 
         try {
-            Log::info('Trying to get video list on Youtube starts.');
+            Log::info('Trying to get trend music video list on Youtube starts.');
             // 急上昇音楽動画の取得
-            $youtubeCollection = $this->youtubeService->getTrendVideoList($videoCategoryId);
-            Log::info('Trying to get video list on Youtube ends.');
+            $youtubeCollection = $this->youtubeService->getTrendVideoList($videoCategoryId, self::MAX_RESULTS_COUNT);
+            Log::info('Trying to get trend music video list on Youtube ends.');
 
             if ($youtubeCollection->isEmpty()) {
                 $this->alert('Youtube data is nothing.');

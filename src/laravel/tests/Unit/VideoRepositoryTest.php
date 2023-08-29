@@ -112,6 +112,7 @@ class VideoRepositoryTest extends TestCase
                 'videoUrl' => 'https://sample.com',
             ],
         ]);
+        
         ### Act
         $this->videoRepository->storeTrendVideo($videoCollection);
 

@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\Log;
 
 class YoutubeService
 {
-    /** 取得動画情報上限数 */
-    private const MAX_SNIPPETS_COUNT = 3;
-
     /**
      * Googleクライアントインスタンス
      *
@@ -47,11 +44,12 @@ class YoutubeService
 
     /**
      * 日本の急上昇動画情報を取得
-     * 
+     *
      * @param string $videoCategoryId
+     * @param int $maxResultsCount
      * @return Collection
      */
-    public function getTrendVideoList(string $videoCategoryId) : Collection
+    public function getTrendVideoList(string $videoCategoryId, int $maxResultsCount) : Collection
     {
         $parts = [
             'id',               // 動画ID
@@ -63,7 +61,7 @@ class YoutubeService
         $parts = implode(',', $parts);
         $filter = [
             'chart' => 'mostPopular',
-            'maxResults' => self::MAX_SNIPPETS_COUNT,
+            'maxResults' => $maxResultsCount,
             'regionCode' => 'JP',
             'videoCategoryId' => $videoCategoryId,
         ];
@@ -74,7 +72,7 @@ class YoutubeService
             $youtubeCollection = collect($items->getItems());
             
             // それぞれのリソースを1つのコレクションにまとめる
-            $mergedCollection = $this->_createYoutubeCollection($youtubeCollection);
+            $mergedCollection = $this->_createYoutubeCollection($youtubeCollection, $maxResultsCount);
             // 取得データのログを取る
             Log::debug('Youtube Data Collection: ', $mergedCollection->toArray());
 
@@ -101,9 +99,10 @@ class YoutubeService
      * APIで取得した各プロパティー情報を1つのコレクションに集約
      *
      * @param Collection $collection
+     * @param int $maxResultsCount
      * @return Collection
      */
-    private function _createYoutubeCollection(Collection $collection) : Collection
+    private function _createYoutubeCollection(Collection $collection, int $maxResultsCount) : Collection
     {
         $videoIds = $collection->pluck('id');
         $snippets = $collection->pluck('snippet');
@@ -112,7 +111,7 @@ class YoutubeService
         $contentDetails = $collection->pluck('contentDetails');
         $mergedCollection = collect();
 
-        for ($i = 0; $i < self::MAX_SNIPPETS_COUNT; $i++) {
+        for ($i = 0; $i < $maxResultsCount; $i++) {
             $videoId = $videoIds[$i];
             $snippet = $snippets[$i];
             $statistic = $statistics[$i];

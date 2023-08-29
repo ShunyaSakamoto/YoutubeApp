@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Log;
 
 class GetTrendLatest extends Command
 {
+    /** 動画情報取得上限数 */
+    private const MAX_RESULTS_COUNT = 3;
+
     /**
      * The name and signature of the console command.
      *
@@ -27,7 +30,7 @@ class GetTrendLatest extends Command
     /**
      * Youtubeサービスインスタンス
      *
-     * @param YoutubeService
+     * @var YoutubeService
      */
     private YoutubeService $youtubeService;
 
@@ -50,15 +53,15 @@ class GetTrendLatest extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle() : int
     {
         $videoCategoryId = config('services.youtube.video_category_id.latest');
 
         try {
-            Log::info('Trying to get video list on Youtube starts.');
+            Log::info('Trying to get trend video list on Youtube starts.');
             // 最新急上昇動画の取得
-            $youtubeCollection = $this->youtubeService->getTrendVideoList($videoCategoryId);
-            Log::info('Trying to get video list on Youtube ends.');
+            $youtubeCollection = $this->youtubeService->getTrendVideoList($videoCategoryId, self::MAX_RESULTS_COUNT);
+            Log::info('Trying to get trend video list on Youtube ends.');
 
             if ($youtubeCollection->isEmpty()) {
                 $this->alert('Youtube data is nothing.');

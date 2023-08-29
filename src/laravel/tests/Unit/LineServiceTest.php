@@ -19,8 +19,8 @@ class LineServiceTest extends TestCase
     public function test_send_line_message() : void
     {
         ### Arrange
-        $http_client = new CurlHTTPClient(config('services.line.message.access_token'));
-        $bot = new LINEBot($http_client, ['channelSecret' => config('services.line.message.channel_secret')]);
+        $httpClient = new CurlHTTPClient(config('services.line.message.access_token'));
+        $bot = new LINEBot($httpClient, ['channelSecret' => config('services.line.message.channel_secret')]);
         $message = "LINE送信テスト";
         $textMessageBuilder = new TextMessageBuilder($message);
 
@@ -28,7 +28,7 @@ class LineServiceTest extends TestCase
         $response = $bot->pushMessage(config('services.line.developer.user_id'), $textMessageBuilder);
 
         ## Assert
-        $this->assertNotNull($http_client);
+        $this->assertNotNull($httpClient);
         $this->assertNotNull($bot);
         $this->assertNotNull($textMessageBuilder);
         $this->assertTrue($response->isSucceeded());
