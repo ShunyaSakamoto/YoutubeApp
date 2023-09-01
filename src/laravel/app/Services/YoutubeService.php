@@ -10,6 +10,7 @@ use Google_Service_Exception;
 use Google_Service_YouTube;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class YoutubeService
 {
@@ -70,7 +71,7 @@ class YoutubeService
             // 動画情報の取得
             $items = $this->youtube->videos->listVideos($parts, $filter);
             $youtubeCollection = collect($items->getItems());
-            
+
             // それぞれのリソースを1つのコレクションにまとめる
             $mergedCollection = $this->_createYoutubeCollection($youtubeCollection, $maxResultsCount);
             // 取得データのログを取る
@@ -157,7 +158,7 @@ class YoutubeService
     }
 
     /**
-     * ISO8601形式を秒数へ変換
+     * ISO8601仕様の期間を指定のフォーマットされた時間へ変換
      * 動画の長さは「PT#H#M#S」形式であるため、「h:i:s」形式へ変換する
      *
      * @param string $duration
@@ -165,10 +166,10 @@ class YoutubeService
      */
     private function _convertIso8601ToTime(string $duration) : string
     {
-        preg_match_all('/PT(([0-9]){1,2}H)?(([0-9]{1,2})M)?([0-9]{1,2})S/', $duration, $matches);
-        $hour = $matches[2][0];
-        $minute = $matches[4][0];
-        $second = $matches[5][0];
+        preg_match_all('/PT(([0-9]){1,2}H)?(([0-9]{1,2})M)?(([0-9]{1,2})S)?/', $duration, $matches);
+        $hour = Str::contains($duration, 'H') ? $matches[2][0] : '00';
+        $minute = Str::contains($duration, 'M') ? $matches[4][0] : '00';
+        $second = Str::contains($duration, 'S') ? $matches[5][0] : '00';
 
         return sprintf('%02d:%02d:%02d', $hour, $minute, $second);
     }

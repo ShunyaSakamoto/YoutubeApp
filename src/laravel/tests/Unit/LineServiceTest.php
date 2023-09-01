@@ -3,10 +3,10 @@
 namespace Tests\Unit;
 
 use Illuminate\Support\Facades\Artisan;
-use Tests\TestCase;
 use LINE\LINEBot;
 use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
+use Tests\TestCase;
 
 class LineServiceTest extends TestCase
 {
