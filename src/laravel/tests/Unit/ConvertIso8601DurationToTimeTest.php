@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
+use DateInterval;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 
-class ConvertIso8601ToTimeTest extends TestCase
+class ConvertIso8601DurationToTimeTest extends TestCase
 {
     public function setUp() : void
     {
@@ -15,12 +15,12 @@ class ConvertIso8601ToTimeTest extends TestCase
     }
 
     /**
-     * ISO8601仕様の期間を指定のフォーマットされた時間へ変換
-     * 「PT#H#M#S」形式の期間が「h:i:s」形式の時間へ変換されることを確認する
+     * ISO8601の期間を指定のフォーマットされた時間へ変換
+     * 「PT#H#M#S」形式の期間が「H:i:s」形式の時間へ変換されることを確認する
      *
      * @return void
      */
-    public function test_convert_iso8601_to_time() : void
+    public function test_convert_iso8601_duration_to_time() : void
     {
         ### Arrange
         $iso8601Times = [];
@@ -33,11 +33,7 @@ class ConvertIso8601ToTimeTest extends TestCase
 
         ### Act
         foreach ($iso8601Times as $iso8601Time) {
-            preg_match_all('/PT(([0-9]){1,2}H)?(([0-9]{1,2})M)?(([0-9]{1,2})S)?/', $iso8601Time, $matches);
-            $hour = Str::contains($iso8601Time, 'H') ? $matches[2][0] : '00';
-            $minute = Str::contains($iso8601Time, 'M') ? $matches[4][0] : '00';
-            $second = Str::contains($iso8601Time, 'S') ? $matches[5][0] : '00';
-            $convertedTime = sprintf('%02d:%02d:%02d', $hour, $minute, $second);
+            $convertedTime = (new DateInterval($iso8601Time))->format('%H:%I:%S');
 
             ### Assert
             $this->assertEquals(1, preg_match_all('/([0-9]{2}):([0-9]{2}):([0-9]{2})/', $convertedTime));

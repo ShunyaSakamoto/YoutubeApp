@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\Video\VideoRepository;
+use DateInterval;
 use Exception;
 use Google_Client;
 use Google_Exception;
@@ -10,7 +11,6 @@ use Google_Service_Exception;
 use Google_Service_YouTube;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class YoutubeService
 {
@@ -148,7 +148,7 @@ class YoutubeService
                 'uploadStatus' => $statusInfo->uploadStatus,
                 // contentDetails情報
                 'caption' => $contentDetail->caption,
-                'duration' => $this->_convertIso8601ToTime($contentDetail->duration),
+                'duration' => $this->_convertIso8601DurationToTime($contentDetail->duration),
                 // 独自情報
                 'videoUrl' => $this->_createVideoUrl($videoId),
             ]);
@@ -158,20 +158,15 @@ class YoutubeService
     }
 
     /**
-     * ISO8601仕様の期間を指定のフォーマットされた時間へ変換
-     * 動画の長さは「PT#H#M#S」形式であるため、「h:i:s」形式へ変換する
+     * ISO8601の期間を指定のフォーマットされた時間へ変換
+     * 動画の長さは「PT#H#M#S」形式であるため、「H:i:s」形式へ変換する
      *
      * @param string $duration
      * @return string
      */
-    private function _convertIso8601ToTime(string $duration) : string
+    private function _convertIso8601DurationToTime(string $duration) : string
     {
-        preg_match_all('/PT(([0-9]){1,2}H)?(([0-9]{1,2})M)?(([0-9]{1,2})S)?/', $duration, $matches);
-        $hour = Str::contains($duration, 'H') ? $matches[2][0] : '00';
-        $minute = Str::contains($duration, 'M') ? $matches[4][0] : '00';
-        $second = Str::contains($duration, 'S') ? $matches[5][0] : '00';
-
-        return sprintf('%02d:%02d:%02d', $hour, $minute, $second);
+        return (new DateInterval($duration))->format('%H:%I:%S');
     }
 
     /**
